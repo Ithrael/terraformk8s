@@ -14,8 +14,26 @@ variable "region" {
   default = "cn-hangzhou"
 }
 
-variable "vpc_id" {
-  default = "test-vpc-id"
+
+variable "cidr_blocks" {
+  type = map(string)
+
+  default = {
+    az0 = "192.168.0.0/24"
+    az1 = "192.168.1.0/24"
+    az2 = "192.168.2.0/24"
+  }
+}
+
+
+variable "terway_cidr_blocks" {
+  type = map(string)
+
+  default = {
+    az0 = "192.168.3.0/24"
+    az1 = "192.168.4.0/24"
+    az2 = "192.168.5.0/24"
+  }
 }
 
 
@@ -74,6 +92,12 @@ variable "install_cloud_monitor" {
     default = false
 }
 
+variable "worker_disk_category" {
+    description = "The system disk category of worker node. Its valid value are cloud, cloud_ssd, cloud_essd and cloud_efficiency. Default to cloud_efficiency."
+    default = "cloud_essd"
+}
+
+
 # options: none|static
 variable "cpu_policy" {
     description = "kubelet cpu policy.default: none."
@@ -99,10 +123,33 @@ variable "worker_number" {
 # k8s_pod_cidr is only for flannel network
 variable "pod_cidr" {
   description = "The kubernetes pod cidr block. It cannot be equals to vpc's or vswitch's and cannot be in them."
-  default     = "10.223.0.0/16"
+  default     = "10.204.0.0/16"
 }
 
 variable "service_cidr" {
   description = "The kubernetes service cidr block. It cannot be equals to vpc's or vswitch's or pod's and cannot be in them."
-  default     = "192.168.0.0/16"
+  default     = "172.16.0.0/16"
 }
+
+variable "cluster_addons" {
+  type = list(object({
+    name      = string
+    config    = string
+  }))
+
+  default = [
+    {
+      "name"     = "terway-eniip",
+      "config"   = "",
+    },
+    {
+      "name"     = "csi-plugin",
+      "config"   = "",
+    },
+    {
+      "name"     = "csi-provisioner",
+      "config"   = "",
+    }
+  ]
+}
+

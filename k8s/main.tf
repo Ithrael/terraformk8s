@@ -1,34 +1,36 @@
 resource "random_uuid" "this" {}
 
 
+
 resource "alicloud_vpc" "vpc" {
-  count      = var.vpc_id == "" ? 1 : 0
+  vpc_name       = substr(join("-", [var.vpc_name_prefix, random_uuid.this.result]), 0, 63)
   cidr_block = var.vpc_cidr
 }
 
-
-# According to the vswitch cidr blocks to launch several vswitches
 resource "alicloud_vswitch" "vswitches" {
-  count             = length(var.vswitch_ids) > 0 ? 0 : length(var.vswitch_cidrs)
-  vpc_id            = var.vpc_id == "" ? join("", alicloud_vpc.vpc.*.id) : var.vpc_id
-  cidr_block        = element(var.vswitch_cidrs, count.index)
-  availability_zone = element(var.availability_zone, count.index)
+  vpc_id            = alicloud_vpc.vpc.id
+  count             = length(var.cidr_blocks)
+  cidr_block        = var.cidr_blocks["az${count.index}"]
+  zone_id = element(var.availability_zone, count.index)
+
+  depends_on = [alicloud_vpc.vpc]
 }
 
-# According to the vswitch cidr blocks to launch several vswitches
+
 resource "alicloud_vswitch" "terway_vswitches" {
-  count             = length(var.terway_vswitch_ids) > 0 ? 0 : length(var.terway_vswitch_cirds)
-  vpc_id            = var.vpc_id == "" ? join("", alicloud_vpc.vpc.*.id) : var.vpc_id
-  cidr_block        = element(var.terway_vswitch_cirds, count.index)
-  availability_zone = element(var.availability_zone, count.index)
-}
+  vpc_id            = alicloud_vpc.vpc.id
+  count             = length(var.terway_cidr_blocks)
+  cidr_block        = var.terway_cidr_blocks["az${count.index}"]
+  zone_id = element(var.availability_zone, count.index)
 
+  depends_on = [alicloud_vpc.vpc]
+}
 
 resource "alicloud_cs_managed_kubernetes" "k8s" {
   name                  = var.k8s_name
   count                 = var.k8s_number
-  worker_vswitch_ids    = length(var.vswitch_ids) > 0 ? split(",", join(",", var.vswitch_ids)): length(var.vswitch_cidrs) < 1 ? [] : split(",", join(",", alicloud_vswitch.vswitches.*.id))
-  pod_vswitch_ids       = length(var.terway_vswitch_ids) > 0 ? split(",", join(",", var.terway_vswitch_ids)): length(var.terway_vswitch_cirds) < 1 ? [] : split(",", join(",", alicloud_vswitch.terway_vswitches.*.id))
+  worker_vswitch_ids    = alicloud_vswitch.vswitches.*.id
+  pod_vswitch_ids       = alicloud_vswitch.terway_vswitches.*.id
   worker_instance_types = var.worker_instance_types
   worker_number         = var.worker_number
   node_cidr_mask        = var.node_cidr_mask
@@ -37,7 +39,8 @@ resource "alicloud_cs_managed_kubernetes" "k8s" {
   cpu_policy            = var.cpu_policy
   proxy_mode            = var.proxy_mode
   password              = var.k8s_password
-  pod_cidr              = var.pod_cidr
+  worker_disk_category  = var.worker_disk_category
+  # pod_cidr              = var.pod_cidr
   service_cidr          = var.service_cidr
   slb_internet_enabled  = true
   is_enterprise_security_group = true
