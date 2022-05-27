@@ -19,11 +19,11 @@ RUN apt-get update -y && apt-get install terraform
 RUN mkdir -p /root/terraformk8s
 COPY . /root/terraformk8s
 RUN cd /root/terraformk8s/k8s && terraform init
+WORKDIR /root
 
-
-# RUN curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.4 sh -
-# RUN cd istio-1.13.4 && export PATH=$PWD/bin:$PATH
-# WORKDIR istio-1.13.4
+RUN curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.4 sh -
+RUN cd istio-1.13.4 && export PATH=$PWD/bin:$PATH
+WORKDIR istio-1.13.4
 
 # ## 依赖kubectl配置好config
 # RUN istioctl install --set profile=demo -y
