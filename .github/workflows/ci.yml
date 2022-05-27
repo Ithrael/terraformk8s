@@ -1,0 +1,62 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    env:
+      ALIYUN_ACCESS_KEY : ${{ secrets.ALIYUN_ACCESS_KEY }}
+      ALIYUN_SECRET: ${{ secrets.ALIYUN_SECRET }}
+      TF_VERSION: 1.2.1
+
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set Terraform
+      uses: hashicorp/setup-terraform@v1
+   
+    - name: Terraform fmt
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.2.1
+        tf_actions_subcommand: 'fmt'
+        tf_actions_working_dir: 'terraform'
+        tf_actions_comment: true
+
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.2.1
+        tf_actions_subcommand: 'init'
+        tf_actions_working_dir: 'terraform'
+        tf_actions_comment: true
+
+    - name: Terraform Plan
+      if: github.event_name == 'pull_request'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.2.1
+        tf_actions_subcommand: 'plan'
+        tf_actions_working_dir: 'terraform'
+        tf_actions_comment: true
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.2.1
+        tf_actions_subcommand: 'apply'
+        tf_actions_working_dir: 'terraform'
+        tf_actions_comment: true
