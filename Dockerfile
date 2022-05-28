@@ -24,6 +24,5 @@ RUN cd /root/terraformk8s/k8s && terraform init
 WORKDIR /root
 
 RUN curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.13.4 sh -
-RUN cd istio-1.13.4 && export PATH=$PWD/bin:$PATH
 COPY istio_install.sh /root/istio-1.13.4
 WORKDIR /root/terraformk8s/k8s
