@@ -8,7 +8,7 @@ worker 2台 ecs.c7.xlarge ESSD 40G
 已安装istio
 
 按量付费:2.92元/时+流量费
-![image](image/aliyun_cost.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/aliyun_cost.jpg)
 
 ## 使用
 
@@ -33,16 +33,16 @@ terraform apply
 
 会要求我们输入 yes
 输入后会显示如下信息
-![image](image/apply.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/apply.jpg)
 等待一会(大约10分钟左右),看到如下结果表示集群创建成功
-![image](image/result.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/result.jpg)
 
 ### 配置kubectl
 
 登录aliyun，打开k8s集群后台 https://cs.console.aliyun.com/#/k8s/cluster/list
 
 找到刚我们创建好集群的连接信息
-![image](image/k8s_console.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/k8s_console.jpg)
 将公网访问里的内容复制到 /root/.kube/config文件里
 
 然后验证一下,执行
@@ -52,7 +52,7 @@ kubectl get ns
 ```
 
 有如下图所示信息则表明kubectl配置成功
-![image](image/k_get_ns.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/k_get_ns.jpg)
 
 ### 配置istio
 
@@ -62,15 +62,15 @@ sh istio_install.sh
 ```
 
 有下图所示信息则表明istio配置成功，并部署好了demo服务
-![image](image/istio.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/istio.jpg)
 等pod变成running状态，即可在浏览器打开输出的url进行访问
 
 ```bash
 kubectl get po 
 ```
 
-![image](image/k_get_po.jpg)
-![image](image/istio_demo.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/k_get_po.jpg)
+![image](https://ithrael-image.oss-cn-hangzhou.aliyuncs.com/github/istio_demo.jpg)
 
 ## Next
 
