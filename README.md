@@ -3,8 +3,11 @@
 ## 年轻人的第一个k8s集群
 
 阿里云ack pro托管版集群
+
 k8s version 1.22.3
+
 worker 2台 ecs.c7.xlarge ESSD 40G
+
 已安装istio
 
 按量付费:2.92元/时+流量费
@@ -15,6 +18,7 @@ worker 2台 ecs.c7.xlarge ESSD 40G
 ### 创建集群
 
 已经build好docker image，可以直接使用，也可以git clone项目后自己build
+
 ***建议直接使用build好的image，自己在本地build的话，terraform init和安装istio这两步会比较慢。可以借助gitlab action来build***
 
 ```bash
