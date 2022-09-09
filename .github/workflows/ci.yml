@@ -20,6 +20,6 @@ jobs:
       - name: login aliyun docker hub
         run: echo "${{ env.DOCKER_LOGIN_PASS }}" | docker login "${{ env.DOCKER_HUB }}" -u "${{ env.DOCKER_LOGIN_NAME }}" --password-stdin
       - name: build
-        run: docker build -t registry.cn-hangzhou.aliyuncs.com/ithrael123/k8sclient:v1.0 -f Dockerfile .
+        run: docker build -t registry.cn-hangzhou.aliyuncs.com/ithrael123/k8sclient:v1.16.9 -f Dockerfile .
       - name: push
-        run: docker push registry.cn-hangzhou.aliyuncs.com/ithrael123/k8sclient:v1.0
+        run: docker push registry.cn-hangzhou.aliyuncs.com/ithrael123/k8sclient:v1.16.9

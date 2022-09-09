@@ -46,7 +46,7 @@ resource "alicloud_cs_managed_kubernetes" "k8s" {
   is_enterprise_security_group = true
 
   # version can not be defined in variables.tf. Options: 1.16.6-aliyun.1|1.18.8-aliyun.1
-  version               = "1.22.3-aliyun.1"
+  version               = "1.16.9-aliyun.1"
 
   dynamic "addons" {
       for_each = var.cluster_addons
